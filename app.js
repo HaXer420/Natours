@@ -4,6 +4,7 @@ const express = require('express');
 const sanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const rateLimit = require('express-rate-limit');
+const compression = require('compression');
 // const morgan = require('morgan');
 const dotenv = require('dotenv');
 const tourRouter = require('./routes/tourRoutes');
@@ -56,6 +57,8 @@ app.use(
     ],
   })
 );
+
+app.use(compression);
 
 app.use(express.static(`${__dirname}/public`));
 
