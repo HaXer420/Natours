@@ -10,7 +10,6 @@ const router = express.Router();
 router.get(
   '/',
   bookingController.createBookingCheckout,
-  authController.protect,
   viewControllers.getOverview
 );
 

@@ -9,7 +9,7 @@ exports.getOverview = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
-    title: 'All venues',
+    title: 'All tours',
     data: {
       tour,
     },
