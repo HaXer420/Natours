@@ -9,6 +9,8 @@ router.use('/:tourid/reviews', reviewRouter);
 
 // router.param('id', tourController.checkID);
 
+router.get('/', tourController.getAllTours);
+
 router
   .route('/top-5-cheap')
   .get(tourController.aliasTopTours, tourController.getAllTours);
