@@ -16,6 +16,7 @@ const globalErrorHandler = require('./controllers/errorController');
 
 dotenv.config({ path: './config.env' });
 
+//start express app
 const app = express();
 
 // Global Middlewares
