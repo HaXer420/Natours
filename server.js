@@ -58,6 +58,6 @@ process.on('unhandledRejection', (err) => {
 process.on('SIGTERM', () => {
   console.log('SIGTERM recieved Shutting down APP safely');
   server.close(() => {
-    process.exit(1);
+    console.log('Process Terminated!!!');
   });
 });
