@@ -10,6 +10,12 @@ router.get(
   bookingController.getCheckoutSession
 );
 
+router.get(
+  '/my-tours',
+  authController.protect,
+  bookingController.getMyToursBooked
+);
+
 router.use(authController.protect, authController.restrictTo('admin'));
 
 router
