@@ -134,6 +134,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   //Grant Access to Protected Route
   // console.log(decoded);
   req.user = currentUser;
+  res.locals.user = currentUser;
   next();
 });
 

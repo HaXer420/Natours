@@ -3,6 +3,17 @@ const Tour = require('../models/tourModel');
 // const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 
+///////////////////////////////
+// this handler is for pop-up after some process is done
+
+// exports.alerts = (req, res, next) => {
+//   const { alerts } = req.query;
+
+//   if (alert === 'booking') res.locals.alert = 'Your booking was succesfull!';
+
+//   next();
+// };
+
 exports.getOverview = catchAsync(async (req, res, next) => {
   const tour = await Tour.find();
 

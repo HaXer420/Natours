@@ -50,11 +50,13 @@ const limiter = rateLimit({
 
 app.use('/api', limiter);
 
-app.post(
-  '/webhook-checkout',
-  express.raw({ type: 'application/json' }),
-  bookingController.webhookController
-);
+///////////////////////////
+//not using this strip hook czn It requires front-end
+// app.post(
+//   '/webhook-checkout',
+//   express.raw({ type: 'application/json' }),
+//   bookingController.webhookController
+// );
 
 app.use(express.json({ limit: '20kb' }));
 
