@@ -5,13 +5,14 @@ const sanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const rateLimit = require('express-rate-limit');
 const compression = require('compression');
+const cors = require('cors');
 // const morgan = require('morgan');
 const dotenv = require('dotenv');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
 const bookingRouter = require('./routes/bookingRoutes');
-const viewRouter = require('./routes/viewRoutes');
+// const viewRouter = require('./routes/viewRoutes');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 
@@ -21,6 +22,15 @@ dotenv.config({ path: './config.env' });
 const app = express();
 
 // Global Middlewares
+app.use(cors());
+// app.use(cors({
+//  origin: 'https:/anyfrontendyouwanttoallowforusingapi'
+// }))
+
+app.options('*', cors());
+// app.options('/api/v1/tours/:id', cors());
+//this one is to allow complex routes by only limited domains that we need
+
 app.use(helmet());
 // console.log(process.env.NODE_ENV);
 // if (process.env.NODE_ENV === 'development') {
