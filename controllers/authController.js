@@ -14,6 +14,18 @@ const signInToken = function (id) {
 
 const signinUser = (user, statuscode, res) => {
   const token = signInToken(user._id);
+
+  ////////////////////////////////////
+  // this code is for https secure heroku connection if needed
+
+  // res.cookie('jwt', token, {
+  //   expires: new Date(
+  //     Date.now() + process.env.EXPIRES_COOKIE_IN * 24 * 60 * 60 * 1000
+  //   ),
+  //   httpOnly: true,
+  //   secure: req.secure || req.headers['x-forwarded-proto'] === 'https'
+  // });
+
   const cookieOptions = {
     expires: new Date(
       Date.now() + process.env.EXPIRES_COOKIE_IN * 24 * 60 * 60 * 1000
