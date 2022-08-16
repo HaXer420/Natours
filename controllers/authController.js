@@ -57,11 +57,14 @@ exports.signup = catchAsync(async (req, res, next) => {
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
     passwordChangedAt: req.body.passwordChangedAt,
-    role: req.body.role,
+    temprole: req.body.role,
   });
 
   signinUser(newUser._id, 201, res);
 
+  req.user = newUser;
+
+  next();
   // const token = signInToken(newUser._id);
 
   // res.status(201).json({
@@ -243,4 +246,84 @@ exports.updatePass = catchAsync(async (req, res, next) => {
 
   //login user
   signinUser(user._id, 201, res);
+});
+
+///////////
+// email confirmation
+
+exports.sendEmailConfirm = catchAsync(async (req, res, next) => {
+  // get user email
+  const user = await User.findOne({ email: req.user.email });
+
+  // see if email exist
+
+  if (!user) {
+    return next(new AppError('Email not found Please enter a valid one!'));
+  }
+
+  //generate reset token
+  const EmailToken = user.emailConfirmToken();
+
+  await user.save({ validateBeforeSave: false });
+
+  const resetURL = `${req.protocol}://${req.get(
+    'host'
+  )}/api/v1/users/emailConfrim/${EmailToken}`;
+
+  const message = `Welcome to the Natours! Click on the given link to verify your Natours account:  ${resetURL} \n If you dont do this please ignore this email`;
+
+  try {
+    await sendEmail({
+      email: user.email,
+      subject: 'Email Confirmation',
+      message,
+    });
+
+    // res.status(200).json({
+    //   status: 'success',
+    //   message: 'Token sent to the email provided',
+    // });
+  } catch (err) {
+    user.passwordResetToken = undefined;
+    user.passTokenExpire = undefined;
+    await user.save({ validateBeforeSave: false });
+
+    return next(
+      new AppError('There was error sending email please try again later!', 500)
+    );
+    // res.status(500).json({
+    //   status: 'error',
+    //   message: err.message,
+    // });
+  }
+});
+
+exports.emailConfirm = catchAsync(async (req, res, next) => {
+  // get user based on token
+  const hashedToken = crypto
+    .createHash('sha256')
+    .update(req.params.token)
+    .digest('hex');
+
+  const user = await User.findOne({
+    confirmEmailToken: hashedToken,
+  });
+  // check if user exist
+  if (!user) {
+    return next(new AppError('Your token is invalid', 400));
+  }
+  // console.log('hi');
+  user.role = user.temprole;
+  user.confirmEmailToken = undefined;
+  user.temprole = undefined;
+  await user.save({ validateBeforeSave: false });
+  // send token along with updated info
+
+  signinUser(user._id, 201, res);
+
+  // const token = signInToken(user._id);
+  // res.status(201).json({
+  //   status: 'success',
+  //   token,
+  // });
 });

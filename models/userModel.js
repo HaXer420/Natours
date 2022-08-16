@@ -42,7 +42,11 @@ const userSchema = mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['admin', 'guide', 'lead-guide', 'user'],
+    enum: ['admin', 'guide', 'lead-guide', 'user', 'unverified'],
+    default: 'unverified',
+  },
+  temprole: {
+    type: String,
     default: 'user',
   },
   passResetToken: String,
@@ -51,6 +55,7 @@ const userSchema = mongoose.Schema({
     type: Boolean,
     default: true,
   },
+  confirmEmailToken: String,
 });
 
 userSchema.pre('save', async function (next) {
@@ -105,6 +110,17 @@ userSchema.methods.passwordResetToken = function () {
   this.passTokenExpire = Date.now() + 10 * 60 * 1000;
 
   return ResetToken;
+};
+
+userSchema.methods.emailConfirmToken = function () {
+  const confirmEmail = crypto.randomBytes(32).toString('hex');
+
+  this.confirmEmailToken = crypto
+    .createHash('sha256')
+    .update(confirmEmail)
+    .digest('hex');
+
+  return confirmEmail;
 };
 
 const User = mongoose.model('User', userSchema);
